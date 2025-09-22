@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipKorisnika {
+  KLIJENT
+  IZVODJAC
+}
+
+enum TipProstora {
+  STAN
+  KANCELARIJA
+  KUCA
+  DVORISTE
+}
+
+enum StatusPonude {
+  POSLATO
+  PRIHVACENO
+  ODBIJENO
+}
+
+model Korisnik {
+  id           Int         @id @default(autoincrement())
+  ime          String
+  email        String      @unique
+  lozinkaHash  String
+  tip          TipKorisnika
+  kreiran      DateTime    @default(now())
+
+  prostori     Prostor[]
+  ponude       Ponuda[]    @relation("PonudeKorisnika")
+}
+
+model Prostor {
+  id             Int           @id @default(autoincrement())
+  korisnikId     Int
+  naziv          String
+  kvadraturaM2   Float
+  tip            TipProstora
+  budzetRsd      Int
+  kreiran        DateTime      @default(now())
+
+  korisnik       Korisnik      @relation(fields: [korisnikId], references: [id])
+  radovi         ProstorRad[]
+  kalkulacije    Kalkulacija[]
+  ponude         Ponuda[]
+}
+
+model Rad {
+  id                    Int            @id @default(autoincrement())
+  naziv                 String
+  opis                  String
+  prosecnoTrajanjeDana  Int
+  cenaPoM2Rsd           Int
+
+  radMaterijali         RadMaterijal[]
+  prostori              ProstorRad[]
+}
+
+model Materijal {
+  id                         Int            @id @default(autoincrement())
+  naziv                      String
+  cenaPoJediniciRsd          Int
+  preporucenaKolicinaPoM2    Float
+
+  radMaterijali              RadMaterijal[]
+}
+
+model RadMaterijal {
+  radId          Int
+  materijalId    Int
+  potrosnjaPoM2  Float
+
+  rad            Rad       @relation(fields: [radId], references: [id])
+  materijal      Materijal @relation(fields: [materijalId], references: [id])
+
+  @@id([radId, materijalId])
+}
+
+model ProstorRad {
+  id        Int     @id @default(autoincrement())
+  prostorId Int
+  radId     Int
+
+  prostor   Prostor @relation(fields: [prostorId], references: [id])
+  rad       Rad     @relation(fields: [radId], references: [id])
+
+  @@unique([prostorId, radId])
+}
+
+model Kalkulacija {
+  id                   Int       @id @default(autoincrement())
+  prostorId            Int
+  ukupniTroskoviRsd    Int
+  procenjenoVremeDana  Int
+  datumKreiranja       DateTime  @default(now())
+
+  prostor              Prostor   @relation(fields: [prostorId], references: [id])
+}
+
+model Ponuda {
+  id                        Int           @id @default(autoincrement())
+  korisnikIzvodjacId        Int
+  prostorId                 Int
+  ukupnaCenaRsd             Int
+  predvidjenoTrajanjeDana   Int
+  status                    StatusPonude  @default(POSLATO)
+  datumKreiranja            DateTime      @default(now())
+
+  izvodjac                  Korisnik      @relation("PonudeKorisnika", fields: [korisnikIzvodjacId], references: [id])
+  prostor                   Prostor       @relation(fields: [prostorId], references: [id])
+}
