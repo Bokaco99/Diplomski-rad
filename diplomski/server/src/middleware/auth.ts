@@ -1,25 +1,31 @@
-import jwt from 'jsonwebtoken';
 import { KONFIG } from '../config';
+import { verifikujToken } from '../utils/jwt';
 
 export type Uloga = 'KLIJENT' | 'IZVODJAC';
 export type Identitet = { korisnikId: number; uloga: Uloga };
 
 declare global {
   namespace Express {
-    // Dodajemo polje na req da znamo ko je ulogovan
     interface Request {
+      // Popunjava se ako postoji validan JWT
       identitet?: Identitet;
     }
   }
 }
 
-// Čitanje JWT iz httpOnly cookie-a
+// Čitanje JWT iz httpOnly cookie-a i punjenje req.identitet
 export function autentikacija(req: any, _res: any, next: any) {
   const token = req.cookies?.[KONFIG.jwtCookieName];
   if (token) {
     try {
-      req.identitet = jwt.verify(token, KONFIG.jwtTajna) as Identitet;
-    } catch {}
+      // Token treba da sadrži { korisnikId, uloga }
+      const data = verifikujToken<{ korisnikId: number; uloga: 'KLIJENT'|'IZVODJAC' }>(token);
+      if (data?.korisnikId && data?.uloga) {
+        req.identitet = { korisnikId: Number(data.korisnikId), uloga: data.uloga };
+      }
+    } catch {
+      // nevažeći/istekao token -> tretiramo kao gosta
+    }
   }
   next();
 }
@@ -37,4 +43,13 @@ export function samoUloga(uloga: Uloga) {
     if (req.identitet.uloga !== uloga) return res.status(403).json({ greska: 'Zabranjeno.' });
     next();
   };
+
+  
 }
+
+export { samoUlogovani as authObavezno };
+
+export { autentikacija as authOpcioni };
+
+export const zahtevajUlogu = samoUloga;
+

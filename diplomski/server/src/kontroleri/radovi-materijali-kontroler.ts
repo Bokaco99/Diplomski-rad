@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import prisma from '../prisma';
 
+
 export class KatalogKontroler {
   static async radovi(_req: Request, res: Response) {
     const radovi = await prisma.rad.findMany({ orderBy: { naziv: 'asc' } });

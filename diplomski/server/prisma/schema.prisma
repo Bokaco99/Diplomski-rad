@@ -25,6 +25,7 @@ enum StatusPonude {
   ODBIJENO
 }
 
+
 model Korisnik {
   id           Int         @id @default(autoincrement())
   ime          String
@@ -100,6 +101,7 @@ model Kalkulacija {
   ukupniTroskoviRsd    Int
   procenjenoVremeDana  Int
   datumKreiranja       DateTime  @default(now())
+  detalji              Json? 
 
   prostor              Prostor   @relation(fields: [prostorId], references: [id])
 }

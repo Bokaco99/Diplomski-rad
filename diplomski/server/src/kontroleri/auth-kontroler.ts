@@ -23,7 +23,8 @@ export class AuthKontroler {
       res.cookie(KONFIG.jwtCookieName, token, {
         httpOnly: true,
         sameSite: 'lax',
-        secure: prod,
+        secure: process.env.NODE_ENV === 'production' ? true : false,
+        path: '/',
         maxAge
       });
       return res.json({ ulogovan: true, identitet: payload });
