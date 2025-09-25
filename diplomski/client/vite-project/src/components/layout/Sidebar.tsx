@@ -1,39 +1,74 @@
 import { NavLink } from 'react-router-dom';
 import { Home, Layers, ClipboardList, Package } from 'lucide-react';
 import { useUiProdavnica } from '../../app/store';
+import { useJa } from '../../features/auth/hooks';
+import '../../styles/layout/sidebar.css';
 
-const linkKlase =
-  'flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-100';
-const aktivan =
-  'bg-slate-100 text-slate-900';
-
-export function BocnaTraka() {
+export default function Sidebar() {
   const { sidebarSakrij } = useUiProdavnica();
 
+  // ⬇️ prilagođeno tvom hook-u: ulogovan + isKlijent/isIzvodjac/isAdmin
+  const { ulogovan, isKlijent, isIzvodjac, isAdmin } = useJa();
+
+  if (!ulogovan) return null;
+
   return (
-    <aside
-      className={`${
-        sidebarSakrij ? 'w-14' : 'w-56'
-      } transition-all duration-200 border-r border-slate-200 bg-white p-3`}
-    >
-      <nav className="flex flex-col gap-2">
-        <NavLink to="/dashboard" className={({ isActive }) => `${linkKlase} ${isActive ? aktivan : ''}`}>
-          <Home className="h-4 w-4" />
-          {!sidebarSakrij && <span>Pregled</span>}
-        </NavLink>
-        <NavLink to="/spaces" className={({ isActive }) => `${linkKlase} ${isActive ? aktivan : ''}`}>
-          <Layers className="h-4 w-4" />
-          {!sidebarSakrij && <span>Prostori</span>}
-        </NavLink>
-        <NavLink to="/catalog/works" className={({ isActive }) => `${linkKlase} ${isActive ? aktivan : ''}`}>
-          <ClipboardList className="h-4 w-4" />
-          {!sidebarSakrij && <span>Radovi</span>}
-        </NavLink>
-        <NavLink to="/catalog/materials" className={({ isActive }) => `${linkKlase} ${isActive ? aktivan : ''}`}>
-          <Package className="h-4 w-4" />
-          {!sidebarSakrij && <span>Materijali</span>}
-        </NavLink>
+    <aside className={`side ${sidebarSakrij ? 'side--collapsed' : ''}`}>
+      <nav className="side__nav">
+        <div className="side__section">
+          <div className="side__title">Glavno</div>
+
+          {isKlijent && (
+            <>
+              <NavItem to="/dashboard" label="Pregled" icon={Home} collapsed={sidebarSakrij} />
+              <NavItem to="/spaces" label="Prostori" icon={Layers} collapsed={sidebarSakrij} />
+              <NavItem to="/offers" label="Zatraži uslugu" icon={ClipboardList} collapsed={sidebarSakrij} />
+            </>
+          )}
+
+          {isIzvodjac && (
+            <>
+              <NavItem to="/offers" label="Moje ponude" icon={ClipboardList} collapsed={sidebarSakrij} />
+              <NavItem to="/catalog/works" label="Radovi" icon={ClipboardList} collapsed={sidebarSakrij} />
+              <NavItem to="/catalog/materials" label="Materijali" icon={Package} collapsed={sidebarSakrij} />
+            </>
+          )}
+
+          {isAdmin && (
+            <>
+              <NavItem to="/admin/korisnici" label="Korisnici" icon={Home} collapsed={sidebarSakrij} />
+              <NavItem to="/admin/sifarnici" label="Šifrarnici" icon={Layers} collapsed={sidebarSakrij} />
+            </>
+          )}
+        </div>
       </nav>
     </aside>
   );
 }
+
+type IconCmp = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+function NavItem({
+  to,
+  label,
+  icon: Icon,
+  collapsed,
+}: {
+  to: string;
+  label: string;
+  icon: IconCmp;
+  collapsed: boolean;
+}) {
+  return (
+    <NavLink
+      to={to}
+      end
+      className={({ isActive }) => `side__link ${isActive ? 'is-active' : ''}`}
+      aria-label={label}
+      title={collapsed ? label : undefined}
+    >
+      <Icon className="side__icon" width={16} height={16} aria-hidden />
+      <span className="side__label">{label}</span>
+    </NavLink>
+  );
+}
+

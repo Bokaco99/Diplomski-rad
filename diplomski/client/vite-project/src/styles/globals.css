@@ -4,6 +4,8 @@
 @import './komponente/tabs.css';
 @import './feature/prostor.css';
 @import './komponente/form.css';
+@import '../layout/sidebar.css';
+@import './komponente/tabela.css';
 
 
 :root {

@@ -1,0 +1,76 @@
+/* Toolbar */
+.tbl__toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0 12px;
+}
+.tbl__search {
+  width: 320px;
+  height: 36px;
+  padding: 6px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+.tbl__pages {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Table */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.tbl thead {
+  background: #f8fafc;
+}
+.tbl th, .tbl td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eef2f7;
+  text-align: left;
+  font-size: 14px;
+}
+.tbl tr:last-child td {
+  border-bottom: none;
+}
+
+/* Sort */
+.tbl__th-sort {
+  user-select: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+.tbl__th-sort::after {
+  content: '⇅';
+  font-size: 12px;
+  color: #9aa5b1;
+}
+.tbl__th-sort--asc::after  { content: '↑'; }
+.tbl__th-sort--desc::after { content: '↓'; }
+
+/* Pager buttons */
+.tbl__btn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+.tbl__btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}

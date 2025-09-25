@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 import styles from './Pocetna.module.css';
 
+
 export function PocetnaOkvir({ children }: PropsWithChildren) {
   return <section className={styles.root}>{children}</section>;
 }

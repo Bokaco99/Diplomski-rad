@@ -25,8 +25,8 @@ export default function NoviProstorStrana() {
   });
 
   const sacuvaj: SubmitHandler<Forma> = async (v) => {
-    await http.post('/spaces', v);
-    navi('/spaces');
+    await http.post('/prostori', v);
+    navi('/prostori');
   };
 
   return (

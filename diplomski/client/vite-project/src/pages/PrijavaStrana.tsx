@@ -14,7 +14,7 @@ export default function PrijavaStrana() {
     setGreska(null);
     setLoading(true);
     try {
-      await http.post('/auth/login', { email, password });
+      await http.post('/auth/login', { email, lozinka :password });
       // (opciono) odmah povuci ko je ulogovan
       const { data } = await http.get('/auth/ja');
       // cuvati korisnika u local stogage ili global state if u want

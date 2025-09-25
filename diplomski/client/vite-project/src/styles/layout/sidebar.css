@@ -1,0 +1,37 @@
+.side {
+  width: 240px;
+  padding: 12px;
+  border-right: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.side__section + .side__section {
+  margin-top: 16px;
+}
+
+.side__title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin: 0 0 8px 6px;
+}
+
+.side__link {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: #111827;
+  text-decoration: none;
+  margin: 2px 0;
+}
+
+.side__link:hover {
+  background: #f3f4f6;
+}
+
+.side__link.is-active {
+  background: #111827;
+  color: #ffffff;
+}

@@ -1,12 +1,15 @@
-// components/routes/ProtectedRoute.tsx
+
 import { Navigate, Outlet } from 'react-router-dom';
 import { useJa } from '../features/auth/hooks';
 
-export function ZasticenaRuta() {
+export default function ProtectedRoute() {
   const { podaci, ucitava } = useJa();
 
   if (ucitava) return <div>Učitavanje…</div>;
-  if (!podaci?.identitet) return <Navigate to="/prijava" replace />;
 
-  return <Outlet />; // <- bez ovoga neće prikazati decu ruta
+  // ⬇︎ JEDINA PROMENA:
+  const ulogovan = Boolean((podaci as any)?.identitet || (podaci as any)?.korisnik);
+
+  if (!ulogovan) return <Navigate to="/prijava" replace />;
+  return <Outlet />;
 }

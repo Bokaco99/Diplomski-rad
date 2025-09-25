@@ -58,6 +58,7 @@ if (process.env.NODE_ENV !== 'production') {
 // ---------------------- API rute ----------------------
 app.use('/api/auth', authRute);
 app.use('/api/prostori', prostoriRute);
+app.use('/api/spaces', prostoriRute);
 app.use('/api/katalog', katalogRute);
 app.use('/api/kalkulacije', kalkRute);
 app.use('/api/ponude', ponudeRute);

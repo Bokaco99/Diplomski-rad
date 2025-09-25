@@ -1,4 +1,3 @@
-
 import { Dugme } from '../../../components/ui/Button';
 import { Kartica } from '../../../components/ui/Card';
 import { Kostur } from '../../../components/ui/Skeleton';
@@ -15,7 +14,7 @@ import {
   SkelWide,
   SkelHalf,
 } from './PocetnaLayout';
-
+import { Link } from 'react-router-dom';
 
 export default function PocetnaStrana() {
   const { podaci, ucitava } = useJa();
@@ -44,18 +43,21 @@ export default function PocetnaStrana() {
 
   const ulRaw = podaci?.identitet?.uloga;
   const uloga = normalizujUlogu(ulRaw) ?? 'NEPOZNATO';
+  const jeKlijent = uloga === 'KLIJENT';
+  const jeIzvodjac = uloga === 'IZVODJAC';
+  const jeAdmin = uloga === 'ADMIN';
 
   let naslov = 'Dobrodošli';
   let opis = 'Početna strana sistema.';
-  if (uloga === 'KLIJENT') {
+  if (jeKlijent) {
     naslov = 'Dobrodošli, klijente';
     opis =
       'Ovde možete da kreirate i uređujete svoje prostore, izaberete radove i materijale i pokrenete kalkulaciju troškova.';
-  } else if (uloga === 'IZVODJAC') {
+  } else if (jeIzvodjac) {
     naslov = 'Dobrodošli, izvođaču';
     opis =
       'Ovde možete da pregledate zahteve klijenata, pripremite ponude i ažurirate status svojih ponuda.';
-  } else if (uloga === 'ADMIN') {
+  } else if (jeAdmin) {
     naslov = 'Dobrodošli, administratore';
     opis =
       'Ovde možete da održavate katalog radova i materijala, upravljate korisnicima i nadgledate sistemske aktivnosti.';
@@ -82,9 +84,36 @@ export default function PocetnaStrana() {
             </Dugme>
           </Actions>
         </Kartica>
+
+        {jeKlijent ? (
+          <>
+            <Kartica naslov="Moji prostori">
+              <Description>Pregled i upravljanje prostorima.</Description>
+              <Actions>
+                <Link to="/prostori">
+                  <Dugme>Otvori listu</Dugme>
+                </Link>
+                <Link to="/prostori/novi">
+                  <Dugme rezim="secondary">Dodaj prostor</Dugme>
+                </Link>
+              </Actions>
+            </Kartica>
+
+            <Kartica naslov="Zatraži uslugu">
+              <Description>Pošaljite zahtev za ponudu za postojeći prostor.</Description>
+              <Actions>
+                <Link to="/usluge/zatrazi">
+                  <Dugme>Pokreni</Dugme>
+                </Link>
+              </Actions>
+            </Kartica>
+          </>
+        ) : (
+          <Kartica naslov="Napomena">
+            <Description>Ova verzija početne je fokusirana na klijenta.</Description>
+          </Kartica>
+        )}
       </Stack>
     </PocetnaOkvir>
   );
 }
-
-

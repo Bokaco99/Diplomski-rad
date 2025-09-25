@@ -1,5 +1,7 @@
 import { http } from '../../lib/axios'; 
 
+// http.get('/prostori/moji'), http.post('/prostori'), http.delete('/prostori/:id')
+
 //  Tipovi 
 export type Uloga = 'KLIJENT' | 'IZVODJAC' | 'ADMIN';
 

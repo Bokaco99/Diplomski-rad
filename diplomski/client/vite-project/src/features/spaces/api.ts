@@ -1,8 +1,9 @@
-// src/features/spaces/api.ts
+
 import { http } from '../../lib/axios';
 
-// Dozvoljavamo oba seta vrednosti da bismo bili kompatibilni sa backendom
+
 export type TipProstora = 'STAN' | 'POSLOVNI' | 'APARTMENT' | 'OFFICE';
+
 
 /* ====================== Tipovi ====================== */
 export interface Prostor {
@@ -49,9 +50,16 @@ export interface Ponuda {
 
 /* ====================== Prostori ====================== */
 export async function dohvatiProstore(): Promise<Prostor[]> {
-  const { data } = await http.get('/spaces');
-  // backend može vratiti { items: [...] } ili direktno niz
-  return data?.items ?? data ?? [];
+  const { data } = await http.get(`/prostori/moji`);
+  const arr = Array.isArray(data) ? data : (data?.items ?? []);
+  return arr.map((p: any) => ({
+    id: p.id,
+    naziv: p.naziv,
+    kvadratura: p.kvadraturaM2 ?? p.kvadratura ?? 0,
+    tip: p.tip,
+    budzet: p.budzetRsd ?? p.budzet ?? null,
+    korisnikId: p.korisnikId,
+  }));
 }
 
 export async function kreirajProstor(payload: {
@@ -60,20 +68,32 @@ export async function kreirajProstor(payload: {
   tip: TipProstora;
   budzet?: number | null;
 }) {
-  const { data } = await http.post('/spaces', payload);
-  return data as Prostor;
+  const { data } = await http.post('/prostori', {
+    naziv: payload.naziv,
+    kvadraturaM2: payload.kvadratura,
+    tip: payload.tip,
+    budzetRsd: payload.budzet ?? null,
+  });
+  return {
+    id: data.id,
+    naziv: data.naziv,
+    kvadratura: data.kvadraturaM2 ?? data.kvadratura ?? 0,
+    tip: data.tip,
+    budzet: data.budzetRsd ?? data.budzet ?? null,
+    korisnikId: data.korisnikId,
+  } as Prostor;
 }
 
-export async function obrisiProstor(id: number) {
-  const { data } = await http.delete(`/spaces/${id}`);
-  return data as { uspesno: boolean } | Prostor | undefined;
-}
+// export async function obrisiProstor(id: number) {
+//   const { data } = await http.delete(`/prostori/${id}`);
+//   return data as { uspesno: boolean } | Prostor | undefined;
+// }
 
-export async function getProstor(id: number): Promise<Prostor> {
-  const { data } = await http.get(`/spaces/${id}`);
-  // backend može vratiti { prostor: {...} } ili direktno objekat
-  return data?.prostor ?? data;
-}
+// export async function getProstor(id: number): Promise<Prostor> {
+//   const { data } = await http.get(`/prostori/${id}`);
+//   // backend može vratiti { prostor: {...} } ili direktno objekat
+//   return data?.prostor ?? data;
+// }
 
 /* ====================== Katalog (radovi/materijali) ====================== */
 export async function getRadovi(): Promise<Rad[]> {
