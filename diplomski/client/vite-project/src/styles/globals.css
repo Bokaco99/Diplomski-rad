@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import './komponente/tabs.css';
+@import './feature/prostor.css';
+@import './komponente/form.css';
 
 
 :root {

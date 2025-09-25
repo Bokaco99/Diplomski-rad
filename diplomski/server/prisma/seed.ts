@@ -46,7 +46,7 @@ async function seedKorisnici() {
     });
   }
 
-  console.log('✅ Seed: korisnici kreirani');
+  console.log('Seed: korisnici kreirani');
 }
 
 async function seedRadoviIMaterijali() {

@@ -1,24 +1,86 @@
+// src/features/spaces/stranice/ProstorDetalj.tsx
 import { NavLink, Outlet, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { dohvatiProstore } from '../api';
+
+import '../../../styles/komponente/tabs.css';
+import '../../../styles/feature/prostor.css';
 
 export default function ProstorDetaljStrana() {
   const { id } = useParams();
+  const prostorId = Number(id);
 
-  const base = `/spaces/${id}`;
+  const { data: prostori, isLoading, isError } = useQuery({
+    queryKey: ['prostori'],
+    queryFn: () => dohvatiProstore(),
+  });
 
-  const link = 'rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100';
-  const active = 'bg-slate-100 text-slate-900';
+  if (!Number.isFinite(prostorId)) {
+    return <div className="plan-panel">Neispravan ID prostora.</div>;
+  }
+
+  if (isLoading) return <div className="plan-panel">Učitavanje prostora…</div>;
+  if (isError || !prostori) return <div className="plan-panel">Greška pri čitanju prostora.</div>;
+
+  const prostor = prostori.find(p => p.id === prostorId);
+  if (!prostor) return <div className="plan-panel">Prostor nije pronađen.</div>;
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-xl font-semibold">Prostor #{id}</h1>
-        <div className="mt-3 flex gap-2">
-          <NavLink to={`${base}`} end className={({ isActive }) => `${link} ${isActive ? active : ''}`}>Pregled</NavLink>
-          <NavLink to={`${base}/plan`} className={({ isActive }) => `${link} ${isActive ? active : ''}`}>Plan</NavLink>
-          <NavLink to={`${base}/calculation`} className={({ isActive }) => `${link} ${isActive ? active : ''}`}>Kalkulacija</NavLink>
-          <NavLink to={`${base}/offers`} className={({ isActive }) => `${link} ${isActive ? active : ''}`}>Ponude</NavLink>
+    <div className="page-space">
+      <div className="space-header">
+        <h1 className="space-title">{prostor.naziv}</h1>
+      </div>
+
+      <div className="space-meta">
+        <div className="item">
+          <span className="label">Kvadratura</span>
+          <span className="value">{prostor.kvadratura} m²</span>
+        </div>
+        <div className="item">
+          <span className="label">Tip</span>
+          <span className="value">{prostor.tip}</span>
+        </div>
+        <div className="item">
+          <span className="label">Budžet</span>
+          <span className="value">
+            {prostor.budzet ? `${prostor.budzet.toLocaleString('sr-RS')} RSD` : '—'}
+          </span>
+        </div>
+        <div className="item">
+          <span className="label">ID</span>
+          <span className="value">#{prostor.id}</span>
         </div>
       </div>
+
+      <div className="tabs">
+        <NavLink
+          end
+          to={`/prostori/${prostorId}`}
+          className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+        >
+          Pregled
+        </NavLink>
+        <NavLink
+          to={`/prostori/${prostorId}/plan`}
+          className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+        >
+          Plan
+        </NavLink>
+        <NavLink
+          to={`/prostori/${prostorId}/kalkulacije`}
+          className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+        >
+          Kalkulacije
+        </NavLink>
+        <NavLink
+          to={`/prostori/${prostorId}/ponude`}
+          className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
+        >
+          Ponude
+        </NavLink>
+        <div className="tab-spacer" />
+      </div>
+
       <Outlet />
     </div>
   );
