@@ -1,8 +1,10 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { useMe } from '../../features/auth/hooks';
+
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useJa } from '../../features/auth/hooks';
 
 export function ZasticenaRuta() {
-  const { podaci, ucitava, greska } = useMe();
+  const { podaci, ucitava, greska } = useJa();
+  const lokacija = useLocation();
 
   if (ucitava) {
     return (
@@ -13,7 +15,8 @@ export function ZasticenaRuta() {
   }
 
   if (greska || !podaci?.ulogovan) {
-    return <Navigate to="/login" replace />;
+    // state: from — da posle logina vratimo korisnika na traženu stranicu
+    return <Navigate to="/prijava" replace state={{ from: lokacija }} />;
   }
 
   return <Outlet />;

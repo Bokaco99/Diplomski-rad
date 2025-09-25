@@ -1,6 +1,6 @@
 import prisma from '../prisma';
 
-// Jednostavna kalkulacija: sabira cenu radova + cenu materijala, vreme = zbir dana
+
 export async function izracunajIKreirajKalkulaciju(prostorId: number) {
   const prostor = await prisma.prostor.findUnique({
     where: { id: prostorId },

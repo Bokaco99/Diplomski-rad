@@ -29,7 +29,7 @@ export async function registracija(req: Request, res: Response) {
     select: { id: true, email: true, tip: true, ime: true },
   });
 
-  // 🔧 JWT mora imati { korisnikId, uloga } da bi middleware popunio req.identitet
+ 
   const token = napraviToken({ korisnikId: korisnik.id, uloga: korisnik.tip });
   res.cookie('token', token, cookieOpcije);
 
@@ -45,7 +45,7 @@ export async function login(req: Request, res: Response) {
   const ok = await bcrypt.compare(lozinka, korisnik.lozinkaHash);
   if (!ok) return res.status(400).json({ greska: 'Pogrešan email ili lozinka' });
 
-  // 🔧 isti payload oblik kao gore
+  
   const token = napraviToken({ korisnikId: korisnik.id, uloga: korisnik.tip });
   res.cookie('token', token, cookieOpcije);
 

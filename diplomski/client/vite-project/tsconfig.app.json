@@ -15,16 +15,12 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-
-    /* Aliases */
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
       "@styles/*": ["src/styles/*"],
       "@app/*": ["src/app/*"]
     },
-
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

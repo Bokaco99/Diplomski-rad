@@ -2,16 +2,18 @@ import { Outlet } from 'react-router-dom';
 import { GornjaTraka } from './TopNav';
 import { BocnaTraka } from './Sidebar';
 
+
 export function RasporedAplikacije() {
   return (
-    <div className="flex h-screen">
+    <div className="app-layout">
       <BocnaTraka />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="app-content">
         <GornjaTraka />
-        <main className="container-ogr py-6">
+        <main className="container-ogr">
           <Outlet />
         </main>
       </div>
     </div>
   );
 }
+

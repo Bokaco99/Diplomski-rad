@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { prisma } from '../../prisma';
 import { Prisma } from '@prisma/client';
-// Pomoćna funkcija koja računa iznos po radovima i materijalima
+// racunanje iznosa radova i materijala
 async function izracunaj(prostorId: number) {
   const prostor = await prisma.prostor.findUnique({
     where: { id: prostorId },
     include: {
-      radovi: { include: { rad: { include: { radMaterijali: { include: { materijal: true } } } } } }, // ProstorRad[] -> Rad -> normativi -> Materijal
+      radovi: { include: { rad: { include: { radMaterijali: { include: { materijal: true } } } } } }, 
     },
   });
 
@@ -64,11 +64,11 @@ async function izracunaj(prostorId: number) {
   return { detalji, ukupno, ukupnoDana };
 }
 
-// Kreira kalkulaciju i čuva rezultat
+// cuvanje rezultata
 export async function kreirajKalkulaciju(req: Request, res: Response) {
   const { prostorId } = req.body as { prostorId: number };
 
-  // Provera vlasništva – klijent može praviti kalkulacije samo za svoje prostore
+  // provera
   const pr = await prisma.prostor.findUnique({ where: { id: prostorId } });
   if (!pr) return res.status(404).json({ greska: 'Prostor nije pronađen' });
   if (pr.korisnikId !== req.korisnik!.id) {
@@ -89,7 +89,7 @@ export async function kreirajKalkulaciju(req: Request, res: Response) {
   return res.status(201).json({ kalkulacija: kalk });
 }
 
-// Lista kalkulacija po prostoru (samo moji prostori)
+
 export async function listaKalkulacija(req: Request, res: Response) {
   const prostorId = Number(req.query.prostorId);
   if (!prostorId) return res.status(400).json({ greska: 'Nedostaje prostorId' });

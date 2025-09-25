@@ -33,7 +33,7 @@ export class ProstoriKontroler {
       const prostorId = Number(req.params.id);
       const { radIds } = req.body as { radIds: number[] };
 
-      // Provera vlasništva
+      // Provera vlasnistva
       const p = await prisma.prostor.findUnique({ where: { id: prostorId } });
       if (!p || p.korisnikId !== req.identitet.korisnikId) return res.status(404).json({ greska: 'Prostor nije pronađen.' });
 

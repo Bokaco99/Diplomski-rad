@@ -1,0 +1,24 @@
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+}
+
+
+.app-content {
+  min-width: 0;           
+  flex: 1 1 auto;         
+  display: flex;
+  flex-direction: column;
+}
+
+
+.container-ogr {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 24px;      
+  padding-bottom: 24px;
+  padding-left: 16px;    
+  padding-right: 16px;
+}

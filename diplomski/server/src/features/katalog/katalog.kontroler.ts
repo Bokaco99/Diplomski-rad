@@ -12,7 +12,6 @@ export async function listajRadove(_req: Request, res: Response) {
     },
   });
 
-  // Mapiramo radMaterijali -> normativi (za lepši API)
   const radoviDto = radovi.map(({ radMaterijali, ...rest }) => ({
     ...rest,
     normativi: radMaterijali.map(rm => ({

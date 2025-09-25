@@ -10,7 +10,7 @@ export class KalkulacijeKontroler {
       const { prostorId } = req.params as unknown as { prostorId: number };
       const korisnikId = req.identitet.korisnikId;
 
-      // Provera vlasništva (klijent)
+      // Provera 
       const p = await prisma.prostor.findUnique({ where: { id: prostorId }, select: {korisnikId:true}});
 
        if (!p) return res.status(404).json({ greska: 'Prostor nije pronađen.' });
@@ -34,7 +34,7 @@ export class KalkulacijeKontroler {
     return res.status(400).json({ greska: 'Nevažeći prostorId.' });
   }
     const korisnikId = req.identitet!.korisnikId;
-    // Dozvoli vlasniku da vidi svoje kalkulacije
+    // Dozvole
     const p = await prisma.prostor.findUnique({ where: { id: prostorId },select: { korisnikId: true } });
      if (!p) return res.status(404).json({ greska: 'Prostor nije pronađen.' });
       if (p.korisnikId !== req.identitet.korisnikId) {

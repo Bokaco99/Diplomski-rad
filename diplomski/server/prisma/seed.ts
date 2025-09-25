@@ -1,17 +1,7 @@
 import { PrismaClient, TipKorisnika, TipProstora } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
-/**
- * Ovaj seed:
- * - Kreira više klijenata i izvođača (sa istom lozinkom: "lozinka123")
- * - Dodaje bogat skup radova i materijala (sa normativima po m2)
- * - Kreira primere prostora (stan, kuća, kancelarija, dvorište)
- * - Povezuje konkretne radove sa prostorima (ProstorRad)
- *
- * Napomena:
- * - Sve cene su u RSD (int), kvadrature su u m2 (float), trajanja u danima (int)
- * - Normativi su ilustrativni i služe za prezentaciju (mogu se korigovati po potrebi)
- */
+
 
 const prisma = new PrismaClient();
 const ROUNDS = 10;
@@ -29,7 +19,7 @@ async function seedKorisnici() {
     { ime: 'Jelena Vlasnik', email: 'jelena.vlasnik@primer.rs' }
   ];
 
-  // Izvođači (naziv sugeriše specijalnosti radi prezentacije)
+  // Izvođaci
   const izvodjaci = [
     { ime: 'Marko Gips & Krečenje', email: 'marko.gips@primer.rs' },
     { ime: 'Stefan Vodoinstalater', email: 'stefan.voda@primer.rs' },
@@ -60,9 +50,9 @@ async function seedKorisnici() {
 }
 
 async function seedRadoviIMaterijali() {
-  // ---- RADOVI (osnovni + novi) ----
+  //  RADOVI (osnovni + novi) 
   const radovi = [
-    // Postojeći
+    // Postojeci
     { id: 1,  naziv: 'Krečenje', opis: 'Priprema zidova i krečenje u dve ruke.', prosecnoTrajanjeDana: 2,  cenaPoM2Rsd: 250 },
     { id: 2,  naziv: 'Zamena podova', opis: 'Uklanjanje starih i postavljanje novih podnih obloga.', prosecnoTrajanjeDana: 3,  cenaPoM2Rsd: 1200 },
     { id: 3,  naziv: 'Keramičarski radovi', opis: 'Postavljanje keramičkih pločica u kupatilu ili kuhinji.', prosecnoTrajanjeDana: 4,  cenaPoM2Rsd: 1800 },
@@ -91,7 +81,7 @@ async function seedRadoviIMaterijali() {
 
   await prisma.rad.createMany({ data: radovi });
 
-  // ---- MATERIJALI ----
+  //  MATERIJALI 
   const materijali = [
     // Krečenje / glet
     { id: 1,  naziv: 'Unutrašnja boja (10L)',           cenaPoJediniciRsd: 2800, preporucenaKolicinaPoM2: 0.12 },
@@ -152,11 +142,11 @@ async function seedRadoviIMaterijali() {
 
   await prisma.materijal.createMany({ data: materijali });
 
-  // ---- NORMATIVI (rad ↔ materijal) ----
+  // NORMATIVI (rad ↔ materijal)
   const mById = new Map<number, typeof materijali[number]>(materijali.map(m => [m.id, m]));
 
   const normativi: { radId: number; materijalId: number; potrosnjaPoM2: number }[] = [
-    // Krečenje
+    // Krecenje
     { radId: 1, materijalId: 1, potrosnjaPoM2: mById.get(1)!.preporucenaKolicinaPoM2 },
     { radId: 1, materijalId: 2, potrosnjaPoM2: mById.get(2)!.preporucenaKolicinaPoM2 },
 
@@ -164,16 +154,16 @@ async function seedRadoviIMaterijali() {
     { radId: 2, materijalId: 3, potrosnjaPoM2: mById.get(3)!.preporucenaKolicinaPoM2 },
     { radId: 2, materijalId: 4, potrosnjaPoM2: mById.get(4)!.preporucenaKolicinaPoM2 },
 
-    // Keramičarski radovi
+    // Keramicarski radovi
     { radId: 3, materijalId: 5, potrosnjaPoM2: mById.get(5)!.preporucenaKolicinaPoM2 },
     { radId: 3, materijalId: 6, potrosnjaPoM2: mById.get(6)!.preporucenaKolicinaPoM2 },
     { radId: 3, materijalId: 7, potrosnjaPoM2: mById.get(7)!.preporucenaKolicinaPoM2 },
 
-    // Izrada nameštaja
+    // Izrada namestaja
     { radId: 4, materijalId: 8, potrosnjaPoM2: mById.get(8)!.preporucenaKolicinaPoM2 },
     { radId: 4, materijalId: 9, potrosnjaPoM2: mById.get(9)!.preporucenaKolicinaPoM2 },
 
-    // Montaža nameštaja
+    // Montaza nameštaja
     { radId: 5, materijalId: 9, potrosnjaPoM2: Math.max(0.08, mById.get(9)!.preporucenaKolicinaPoM2 * 0.6) },
 
     // Voda
@@ -219,7 +209,7 @@ async function seedRadoviIMaterijali() {
 
   await prisma.radMaterijal.createMany({ data: normativi, skipDuplicates: true });
 
-  console.log('✅ Seed: radovi, materijali i normativi kreirani');
+  console.log('Seed: radovi, materijali i normativi kreirani');
 }
 
 async function seedProstoriISelektovaniRadovi() {
@@ -230,7 +220,7 @@ async function seedProstoriISelektovaniRadovi() {
 
   if (!ana || !milan || !jelena) throw new Error('Nedostaju klijenti za seed');
 
-  // Kreiramo prostore (stan, kuća, kancelarija, dvorište)
+  // Kreiranje prostora
   const prostori = await prisma.$transaction([
     prisma.prostor.create({
       data: {
@@ -270,16 +260,16 @@ async function seedProstoriISelektovaniRadovi() {
     })
   ]);
 
-  // Povežemo odabrane radove po prostoru
+  // rad x prostor povezivanje
   const [stan, kuca, kancelarija, dvoriste] = prostori;
 
   const parovi: Array<{ prostorId: number; radId: number }> = [
     // Stan
-    { prostorId: stan.id, radId: 1 },  // Krečenje
+    { prostorId: stan.id, radId: 1 },  // Krecenje
     { prostorId: stan.id, radId: 11 }, // Gips
     { prostorId: stan.id, radId: 2 },  // Zamena podova
 
-    // Kuća
+    // kuca
     { prostorId: kuca.id, radId: 8 },  // Krov
     { prostorId: kuca.id, radId: 7 },  // Struja
     { prostorId: kuca.id, radId: 6 },  // Voda
@@ -290,7 +280,7 @@ async function seedProstoriISelektovaniRadovi() {
     { prostorId: kancelarija.id, radId: 3 },  // Keramika
     { prostorId: kancelarija.id, radId: 12 }, // Vrata i prozori
 
-    // Dvorište
+    // Dvoriste
     { prostorId: dvoriste.id, radId: 10 }, // Bazen
     { prostorId: dvoriste.id, radId: 13 }, // Kapije i ograde
     { prostorId: dvoriste.id, radId: 9 }   // Beton
@@ -298,14 +288,14 @@ async function seedProstoriISelektovaniRadovi() {
 
   await prisma.prostorRad.createMany({ data: parovi, skipDuplicates: true });
 
-  console.log('✅ Seed: prostori i izbor radova povezani');
+  console.log('Seed: prostori i izbor radova povezani');
 }
 
 async function main() {
   await seedKorisnici();
   await seedRadoviIMaterijali();
   await seedProstoriISelektovaniRadovi();
-  console.log('🎉 Seed kompletiran.');
+  console.log('Seed kompletiran.');
 }
 
 main()

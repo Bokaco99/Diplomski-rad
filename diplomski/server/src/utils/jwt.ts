@@ -1,7 +1,7 @@
 import jwt, { SignOptions, JwtPayload } from 'jsonwebtoken';
 import { KONFIG } from '../config';
 
-const JWT_TAJNA = KONFIG.jwtTajna; // ⟵ IZ JEDNOG MESTA!
+const JWT_TAJNA = KONFIG.jwtTajna; 
 const JWT_TRAJANJE: SignOptions['expiresIn'] =
   `${Number(process.env.JWT_EXPIRES_IN_DAYS ?? 7)}d`;
 

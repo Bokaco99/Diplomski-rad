@@ -22,14 +22,14 @@ app.use(helmet());
 app.use(cors({ origin: KONFIG.corsOrigin, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(autentikacija); // parsira JWT iz cookie-a i puni req.identitet
+app.use(autentikacija); 
 
 // Health
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
+app.get('/health', (_req, res) => res.status(200).json({ ok: true }));
 
-// ---------- DEV pomoćne rute (uključene samo van produkcije) ----------
+//  DEV pomocne rute 
 if (process.env.NODE_ENV !== 'production') {
-  // 1) DEV-LOGIN: napravi test token i postavi HTTP-only cookie
+  
   app.post('/api/auth/dev-login', (_req, res) => {
     const token = napraviToken({ korisnikId: 1, uloga: 'KLIJENT' as const });
 
@@ -38,13 +38,13 @@ if (process.env.NODE_ENV !== 'production') {
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dana
-      path: '/', // <-- dodato radi simetrije sa clearCookie
+      path: '/', 
     });
 
     return res.json({ ok: true, napomena: 'Postavljen je JWT cookie za test korisnika.' });
   });
 
-  // 2) DEBUG: vidi šta je middleware pročitao
+  
   app.get('/api/debug/ko-sam', (req, res) => {
     res.json({
       jwtCookieName: KONFIG.jwtCookieName,
@@ -63,5 +63,10 @@ app.use('/api/kalkulacije', kalkRute);
 app.use('/api/ponude', ponudeRute);
 
 app.listen(3001, () => console.log('API sluša na 3001'));
+
+app.use((err:any, _req:any, res:any, _next:any) => {
+  console.error('❌ API error:', err);
+  res.status(err.status || 500).json({ greska: err.message || 'Server error' });
+});
 
 export default app;

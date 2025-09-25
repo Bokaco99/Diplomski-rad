@@ -1,0 +1,48 @@
+
+
+.root {
+  max-width: 42rem;           
+  margin: 0 auto;
+}
+
+    
+.stack {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;               
+}
+
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  column-gap: 0.75rem;        
+}
+
+
+.description {
+  color: #334155;             
+  margin-bottom: 1.5rem;      
+}
+
+
+.roleBadge {
+  display: inline-block;
+  border-radius: 9999px;       
+  background-color: #f1f5f9;   
+  padding: 0.25rem 0.75rem;   
+  font-size: 0.75rem;        
+  color: #475569;             
+}
+
+
+.actions {
+  margin-top: 1.5rem;          
+}
+
+
+.skelTitle { height: 1.5rem; width: 33%; }  
+.skelWide  { height: 1rem;   width: 66%; }  
+.skelHalf  { height: 1rem;   width: 50%; }  
+
+

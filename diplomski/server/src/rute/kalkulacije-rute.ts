@@ -7,7 +7,7 @@ import { samoUlogovani } from '../middleware/auth';
 const r = Router();
 
 const Params = z.object({
-  prostorId: z.coerce.number().int().positive() // "6" -> 6; odbija NaN/0/negativno
+  prostorId: z.coerce.number().int().positive() 
 });
 r.post('/:prostorId', samoUlogovani, validiraj(Params, 'params'), KalkulacijeKontroler.kreiraj);
 
