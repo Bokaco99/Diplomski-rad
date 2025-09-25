@@ -38,7 +38,7 @@ export function useOdjava() {
   });
 }
 
-// POST /auth/registracija  (ako koristiš registraciju na FE)
+// POST /auth/registracija  
 export function useRegistracija() {
   const qc = useQueryClient();
   return useMutation({

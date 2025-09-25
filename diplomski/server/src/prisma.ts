@@ -1,4 +1,4 @@
-// Jedan PrismaClient kroz ceo app (da ne otvaramo više konekcija u dev-u)
+
 import { PrismaClient } from '@prisma/client';
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };

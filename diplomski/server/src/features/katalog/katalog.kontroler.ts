@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma } from '../../prisma';
 
-// Svi radovi sa pripadajućim normativima materijala
+// Svi radovi 
 export async function listajRadove(_req: Request, res: Response) {
   const radovi = await prisma.rad.findMany({
     orderBy: { naziv: 'asc' },

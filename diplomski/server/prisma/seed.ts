@@ -19,7 +19,7 @@ async function seedKorisnici() {
     { ime: 'Jelena Vlasnik', email: 'jelena.vlasnik@primer.rs' }
   ];
 
-  // Izvođaci
+  // Izvodjaci
   const izvodjaci = [
     { ime: 'Marko Gips & Krečenje', email: 'marko.gips@primer.rs' },
     { ime: 'Stefan Vodoinstalater', email: 'stefan.voda@primer.rs' },
@@ -83,7 +83,7 @@ async function seedRadoviIMaterijali() {
 
   //  MATERIJALI 
   const materijali = [
-    // Krečenje / glet
+    // Krecenje / glet
     { id: 1,  naziv: 'Unutrašnja boja (10L)',           cenaPoJediniciRsd: 2800, preporucenaKolicinaPoM2: 0.12 },
     { id: 2,  naziv: 'Glet masa (25kg)',                cenaPoJediniciRsd: 1500, preporucenaKolicinaPoM2: 0.08 },
 

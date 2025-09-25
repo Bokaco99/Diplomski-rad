@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dodatne promenljive za spacing i radius */
+
 :root {
   --radius: 12px;
   --card-radius: 16px;

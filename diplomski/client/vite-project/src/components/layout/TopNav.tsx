@@ -1,4 +1,4 @@
-// src/components/layout/GornjaTraka.tsx
+
 import { Menu, LogOut } from 'lucide-react';
 import { Dugme } from '../../components/ui/Button';
 import { useUiProdavnica } from '../../app/store';

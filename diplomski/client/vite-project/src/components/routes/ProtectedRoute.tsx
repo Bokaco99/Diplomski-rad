@@ -15,7 +15,6 @@ export function ZasticenaRuta() {
   }
 
   if (greska || !podaci?.ulogovan) {
-    // state: from — da posle logina vratimo korisnika na traženu stranicu
     return <Navigate to="/prijava" replace state={{ from: lokacija }} />;
   }
 

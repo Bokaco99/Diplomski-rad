@@ -29,7 +29,7 @@ export default function PrijavaStrana() {
     resolver: zodResolver(shema),
   });
 
-  // Ako je već ulogovan, odmah vodi dalje
+  
   useEffect(() => {
     if (podaci?.ulogovan) {
       navi('/pregled', { replace: true });
@@ -48,7 +48,6 @@ export default function PrijavaStrana() {
           onSubmit={handleSubmit((v) =>
             mut.mutate(v, {
               onSuccess: () => {
-                // Vrati korisnika gde je prvobitno hteo (ako je došao sa zaštićene rute)
                 const povratak = lokacija.state?.from?.pathname ?? '/pregled';
                 navi(povratak, { replace: true });
               },
@@ -70,11 +69,11 @@ export default function PrijavaStrana() {
             greska={errors.lozinka?.message}
           />
 
-          {/* Prikaz server-side greške (npr. pogrešan email/lozinka) */}
+          {/* Prikaz server-side greske (npr. pogresan email/lozinka) */}
           {mut.isError && (
             <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
               {(mut.error as any)?.response?.data?.greska ??
-                'Prijava nije uspela. Proverite kredencijale i pokušajte ponovo.'}
+                'Prijava nije uspela. Neispravan email/lozinka.'}
             </div>
           )}
 

@@ -65,7 +65,7 @@ app.use('/api/ponude', ponudeRute);
 app.listen(3001, () => console.log('API sluša na 3001'));
 
 app.use((err:any, _req:any, res:any, _next:any) => {
-  console.error('❌ API error:', err);
+  console.error(' API error:', err);
   res.status(err.status || 500).json({ greska: err.message || 'Server error' });
 });
 

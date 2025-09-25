@@ -7,7 +7,7 @@ export default function DashboardStrana() {
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard', 'recent'],
     queryFn: async () => {
-      // Stub: backend može kasnije dati recent kalkulacije/ponude
+      // Stub -- backend moZe kasnije dati recent kalkulacije/ponude
       const { data } = await http.get('/calculations?limit=5').catch(() => ({ data: [] }));
       return data;
     }

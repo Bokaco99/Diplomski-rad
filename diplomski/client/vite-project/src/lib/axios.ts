@@ -4,7 +4,7 @@ import { prikaziGresku } from '../components/ui/Toast';
 
 export const http = axios.create({ baseURL: '/api', withCredentials: true });
 
-// opciono: označi XHR zahteve (može zatrebati na BE)
+
 http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 let lastToast = { msg: '', at: 0 };
@@ -23,13 +23,13 @@ http.interceptors.response.use(
       'Došlo je do greške';
 
     if (status === 401) {
-      // Sesija istekla / nije prijavljen → odvedi na /prijava (bez loop-a)
+      // istekla sesija
       if (!redirecting401 && window.location.pathname !== '/prijava') {
         redirecting401 = true;
         window.location.href = '/prijava';
       }
     } else {
-      // Anti-spam: ne prikazuj isti toast u kratkom roku
+      // anti spam
       const now = Date.now();
       if (msg !== lastToast.msg || now - lastToast.at > 2000) {
         prikaziGresku(msg);

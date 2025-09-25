@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { http } from '../lib/axios'; // <- tvoja axios instanca sa baseURL: '/api' i withCredentials: true
+import { http } from '../lib/axios'; 
 
 export default function PrijavaStrana() {
   const navi = useNavigate();
@@ -14,14 +14,13 @@ export default function PrijavaStrana() {
     setGreska(null);
     setLoading(true);
     try {
-      // ↓↓↓ OVO ide ovde ↓↓↓
       await http.post('/auth/login', { email, password });
       // (opciono) odmah povuci ko je ulogovan
       const { data } = await http.get('/auth/ja');
-      // možeš sačuvati korisnika u localStorage ili global state ako želiš
+      // cuvati korisnika u local stogage ili global state if u want
       localStorage.setItem('korisnik', JSON.stringify(data.korisnik ?? data.identitet ?? null));
 
-      navi('/prostori'); // gde želiš da ode posle uspešnog logina
+      navi('/prostori'); // putanja posle logina
     } catch (err: any) {
       const msg = err?.response?.data?.greska || 'Prijava nije uspela.';
       setGreska(msg);

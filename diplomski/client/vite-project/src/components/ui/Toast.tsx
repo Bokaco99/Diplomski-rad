@@ -15,11 +15,8 @@ export type Poruka = {
 };
 
 type Kontekst = {
-  /** Dodaj toast sa punom kontrolom (tip, tekst) */
   dodaj: (p: Omit<Poruka, 'id'>) => void;
-  /** Brzo prikaži poruku (podrazumevani tip: 'info') */
   show: (poruka: string, tip?: Poruka['tip']) => void;
-  /** Ručno ukloni toast po id */
   ukloni: (id: string) => void;
 };
 
@@ -31,7 +28,7 @@ export function useToster() {
   return ctx;
 }
 
-/** Globalni helper za Axios interceptore i sl. */
+
 export function prikaziGresku(msg: string) {
   window.dispatchEvent(
     new CustomEvent('toast:show', { detail: { message: msg, type: 'greska' as const } })
@@ -48,7 +45,6 @@ export function TosterProvajder({ children }: { children: ReactNode }) {
   const dodaj = useCallback((p: Omit<Poruka, 'id'>) => {
     const id = crypto.randomUUID();
     setPoruke((s) => [...s, { ...p, id }]);
-    // auto-hide posle 4s
     setTimeout(() => ukloni(id), 4000);
   }, [ukloni]);
 
@@ -57,7 +53,6 @@ export function TosterProvajder({ children }: { children: ReactNode }) {
     [dodaj]
   );
 
-  // Event bridge: omogućava pozive van React-a (npr. iz Axios interceptora)
   useEffect(() => {
     const onShow = (e: Event) => {
       const ce = e as CustomEvent<{ message: string; type?: Poruka['tip'] }>;
@@ -101,12 +96,9 @@ export function TosterProvajder({ children }: { children: ReactNode }) {
   );
 }
 
-// Alias koji si koristila
 export { TosterProvajder as TosterProvider };
 
-
 export function useToast() {
-  // mapiramo na postojeći kontekst
   const { show } = useToster();
   return { show };
 }

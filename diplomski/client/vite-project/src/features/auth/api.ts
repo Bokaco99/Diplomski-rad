@@ -1,6 +1,6 @@
 import { http } from '../../lib/axios'; 
 
-// ===== Tipovi =====
+//  Tipovi 
 export type Uloga = 'KLIJENT' | 'IZVODJAC' | 'ADMIN';
 
 export type Identitet = {
@@ -26,8 +26,7 @@ export type RegistracijaDto = {
   uloga: Extract<Uloga, 'KLIJENT' | 'IZVODJAC'>;
 };
 
-// Backend obično vraća { id, ime, email, uloga } pri registraciji.
-// Ako tvoj BE šalje "tip" umesto "uloga", mapiramo ga ispod.
+
 export type KorisnikOsnovno = {
   id: number;
   ime: string;
@@ -35,7 +34,7 @@ export type KorisnikOsnovno = {
   uloga: Extract<Uloga, 'KLIJENT' | 'IZVODJAC'>;
 };
 
-// ===== Helper: normalizacija uloge (tolerantan na dijakritiku i sinonime) =====
+//  normalizacija uloge 
 export function normalizujUlogu(
   uloga?: string
 ): Uloga | undefined {
@@ -55,8 +54,8 @@ export function normalizujUlogu(
   return undefined;
 }
 
-// ===== API pozivi (Axios) =====
-// Napomena: ovde eksplicitno prosleđujemo { withCredentials: true } da bi kolačići (JWT) putovali.
+// API pozivi
+// Napomena:  prosledjujemo { withCredentials: true } da bi kolacici (JWT) putovali.
 
 export async function prijava(podaci: PrijavaDto) {
   const { data } = await http.post('/auth/login', podaci, { withCredentials: true });
@@ -65,7 +64,7 @@ export async function prijava(podaci: PrijavaDto) {
 
 export async function registracija(podaci: RegistracijaDto) {
   const { data } = await http.post('/auth/registracija', podaci, { withCredentials: true });
-  // data može biti { id, ime, email, uloga } ili { id, ime, email, tip }
+  // data moze biti { id, ime, email, uloga } ili { id, ime, email, tip }
   const uloga =
     normalizujUlogu((data as any)?.uloga ?? (data as any)?.tip) ?? 'KLIJENT';
   const rez: KorisnikOsnovno = {
@@ -79,7 +78,7 @@ export async function registracija(podaci: RegistracijaDto) {
 
 export async function ja() {
   const { data } = await http.get('/auth/ja', { withCredentials: true });
-  // očekuje se { ulogovan: boolean, identitet: { korisnikId, uloga } | null }
+  // ocekuje se { ulogovan: boolean, identitet: { korisnikId, uloga } | null }
   if (data?.identitet?.uloga) {
     const norm = normalizujUlogu(data.identitet.uloga);
     if (norm) data.identitet.uloga = norm;
